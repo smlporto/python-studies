@@ -1,28 +1,27 @@
 import os
 from art import logo
 
-def add_new_bid(participant_name, bid_price):
-    new_bid = {}
-    new_bid["name"] = participant_name
-    new_bid["bid"] = bid_price
-    bid_prices.append(new_bid)
+def highest_bid(bidding_record):
+    highest_bid = 0
+    winner = ""
+    for bidder in bidding_record:
+        if bidding_record[bidder] > highest_bid:
+            highest_bid = bidding_record[bidder]
+            winner = bidder
+    print(f"The highest bid was ${highest_bid}.\nCongratulations {winner.upper()}!!")
+
 
 print(logo)
 
-bid_prices = []
 keep_going = True
-highest_bid = 0
+bid_prices = {}
 
 while keep_going:
 
     name = input("What's you name?: ")
     bid = int(input("What's your bid?: $"))
 
-    if bid > highest_bid:
-        winner = name
-        highest_bid = bid
-
-    add_new_bid(name, bid)
+    bid_prices[name] = bid
 
     answer = input("Any other bid? ('yes' / 'no') ")
 
@@ -31,8 +30,10 @@ while keep_going:
         os.system('cls')
     else:
         keep_going = False
+        os.system('cls')
+        highest_bid(bid_prices)
         
-os.system('cls')
-print(f"The highest bid was ${highest_bid}.\nCongratulations {winner.upper()}!!")
+
+
 
 
