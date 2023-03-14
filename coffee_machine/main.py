@@ -24,105 +24,67 @@ MENU = {
     }
 }
 
+profit = 0
 resources = {
     "water": 300,
     "milk": 200,
     "coffee": 100,
-    "money": 0
 }
 
 
-def print_report():
-    print(f"Water: {resources['water']}ml\n"
-          f"Milk: {resources['milk']}ml\n"
-          f"Coffee: {resources['coffee']}g\n"
-          f"Money: ${resources['money']}\n")
+def is_resource_sufficient(order_ingredients):
+    """Returns True when order can be made, False if ingredients are insufficient."""
+    for item in order_ingredients:
+        if order_ingredients[item] > resources[item]:
+            print(f"​Sorry there is not enough {item}.")
+            return False
+    return True
 
 
-def make_coffee(coffee_option):
-    if coffee_option == "espresso":
-        resources['water'] -= MENU['espresso']['ingredients']['water']
-        resources['coffee'] -= MENU['espresso']['ingredients']['coffee']
-    elif coffee_option == "latte":
-        resources['water'] -= MENU['latte']['ingredients']['water']
-        resources['milk'] -= MENU['latte']['ingredients']['milk']
-        resources['coffee'] -= MENU['latte']['ingredients']['coffee']
-    elif coffee_option == "capuccino":
-        resources['water'] -= MENU['capuccino']['ingredients']['water']
-        resources['milk'] -= MENU['capuccino']['ingredients']['milk']
-        resources['coffee'] -= MENU['capuccino']['ingredients']['coffee']
-
-
-# TODO 4 - Check if the resources are sufficient to make a drink
-def check_resources(coffee_option):
-    if coffee_option == "espresso":
-        if resources['water'] < 50:
-            print("Sorry there is not enough water!")
-        elif resources['coffee'] < 18:
-            print("Sorry there is not enough coffee!")
-        else:
-            payment(coffee_option)
-    elif coffee_option == "latte":
-        if resources['water'] < 200:
-            print("Sorry there is not enough water!")
-        elif resources['milk'] < 150:
-            print("Sorry there is not enough milk!")
-        elif resources['coffee'] < 24:
-            print("Sorry there is not enough coffee!")
-        else:
-            payment(coffee_option)
-    elif coffee_option == "capuccino":
-        if resources['water'] < 250:
-            print("Sorry there is not enough water!")
-        elif resources['milk'] < 100:
-            print("Sorry there is not enough milk!")
-        elif resources['coffee'] < 24:
-            print("Sorry there is not enough coffee!")
-        else:
-            payment(coffee_option)
-
-
-# TODO 5 - If there are sufficient resources, ask for the coins and calculate the value
-def payment(coffee_option):
+def process_coins():
+    """Returns the total calculated from coins inserted."""
     print("Please insert coins.")
-    quarters = int(input("How many quarters?")) * 0.25
-    dimes = int(input("How many dimes?")) * 0.10
-    nickels = int(input("How many nickels?")) * 0.05
-    pennies = int(input("How many pennies?")) * 0.01
-    total = quarters + dimes + nickels + pennies
-
-    # TODO 6 - Check if transaction was successful
-    if coffee_option == 'espresso':
-        if total >= MENU['espresso']['cost']:
-            print(f"Here is ${total - MENU['espresso']['cost']} in change.")
-            print(f"Here is your espresso ☕. Enjoy!\n")
-            make_coffee(coffee_option)
-        else:
-            print(f"Sorry! That's not enough money.\nMoney refunded!\n")
-    elif coffee_option == 'latte':
-        if total >= MENU['latte']['cost']:
-            print(f"Here is ${total - MENU['latte']['cost']} in change.")
-            print(f"Here is your latte ☕. Enjoy!\n")
-            make_coffee(coffee_option)
-        else:
-            print(f"Sorry! That's not enough money.\nMoney refunded!\n")
-    elif coffee_option == 'capuccino':
-        if total >= MENU['capuccino']['cost']:
-            print(f"Here is ${total - MENU['capuccino']['cost']} in change.")
-            print(f"Here is your capuccino ☕. Enjoy!\n")
-            make_coffee(coffee_option)
-        else:
-            print(f"Sorry! That's not enough money.\nMoney refunded!\n")
+    total = int(input("how many quarters?: ")) * 0.25
+    total += int(input("how many dimes?: ")) * 0.1
+    total += int(input("how many nickles?: ")) * 0.05
+    total += int(input("how many pennies?: ")) * 0.01
+    return total
 
 
-user_request = ''
-# TODO 2 - Turn off the coffee machine when entering "off" at the prompt
-while user_request != "off":
-    # TODO 1 - Ask the user what he would like (espresso/latte/capuccino)
-    user_request = input("What would you like? (espresso/latte/capuccino): ").lower()
-
-    # TODO 3 - Print a report with the remaining resources on the machine
-    if user_request == "report":
-        print_report()
+def is_transaction_successful(money_received, drink_cost):
+    """Return True when the payment is accepted, or False if money is insufficient."""
+    if money_received >= drink_cost:
+        change = round(money_received - drink_cost, 2)
+        print(f"Here is ${change} in change.")
+        global profit
+        profit += drink_cost
+        return True
     else:
-        check_resources(user_request)
+        print("Sorry that's not enough money. Money refunded.")
+        return False
+
+
+def make_coffee(drink_name, order_ingredients):
+    """Deduct the required ingredients from the resources."""
+    for item in order_ingredients:
+        resources[item] -= order_ingredients[item]
+    print(f"Here is your {drink_name} ☕️. Enjoy!")
+
+
+is_on = True
+
+while is_on:
+    choice = input("​What would you like? (espresso/latte/cappuccino): ")
+    if choice == "off":
+        is_on = False
+    elif choice == "report":
+        print(f"Water: {resources['water']}ml")
+        print(f"Milk: {resources['milk']}ml")
+        print(f"Coffee: {resources['coffee']}g")
+        print(f"Money: ${profit}")
+    else:
+        drink = MENU[choice]
+        if is_resource_sufficient(drink["ingredients"]):
+            payment = process_coins()
+            if is_transaction_successful(payment, drink["cost"]):
+                make_coffee(choice, drink["ingredients"])
