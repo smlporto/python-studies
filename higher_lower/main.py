@@ -75,5 +75,3 @@ def higher_lower():
         compare_answer(answer, right_choice, score)
 
 higher_lower()
-
-
