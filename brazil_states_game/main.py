@@ -16,13 +16,11 @@ while game_is_on:
     answer = screen.textinput(f"Guess the state {len(guessed)}/{len(states)}", "What's another state's name? (exit to quit)").title()
 
     if answer == "Exit":
-        missing = []
-        for state in states:
-            if state not in guessed:
-                missing.append(state)
+        missing = [state for state in states if state not in guessed]
         missing_data = pandas.DataFrame(missing)
         missing_data.to_csv("to_learn.csv")
         break
+
     if answer in states:
         guessed.append(answer)
         t = turtle.Turtle()
