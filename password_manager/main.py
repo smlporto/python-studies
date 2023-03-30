@@ -67,6 +67,21 @@ def save_password():
             input_password.delete(0, END)
             input_website.focus()
 
+# ------------------------- SEARCH PASSWORD --------------------------- #    
+def search_website():
+
+    search_website = input_website.get()
+
+    try:
+        with open("password_manager.json", "r") as json_data:
+            #Reading old data
+            data = json.load(json_data)
+            data_email = data[search_website]["email"]
+            data_password = data[search_website]["password"]
+        messagebox.showinfo(f"{search_website} credentials", f"Email/username: {data_email}\nPassword: {data_password}")
+    except (KeyError, FileNotFoundError):
+        messagebox.showerror(f"This information does not exist", f"There is no information registered about this site credentials!")
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password Manager")
@@ -80,9 +95,12 @@ canvas.grid(column=1, row=0)
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
 
-input_website = Entry(width=35)
+input_website = Entry()
 input_website.grid(column=1, row=1, columnspan=2, sticky="EW")
 input_website.focus()
+
+search_website_button = Button(text="Search", command=search_website)
+search_website_button.grid(column=2, row=1, sticky="EW")
 
 email_username_label = Label(text="Email/Username:")
 email_username_label.grid(column=0, row=2)
