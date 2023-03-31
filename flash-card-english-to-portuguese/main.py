@@ -32,7 +32,6 @@ def flip_card():
 
 def set_to_learn():
     data_dict.remove(new_word)
-    print(len(data_dict))
     words_to_learn = pandas.DataFrame(data_dict)
     words_to_learn.to_csv("./data/words_to_learn.csv", index=False)
     give_new_word()
