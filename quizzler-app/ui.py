@@ -11,7 +11,7 @@ class QuizInterface:
         self.window = Tk()
         self.window.title("Quizzler")
         self.window.config(bg=THEME_COLOR, padx=20, pady=20)
-        self.score = Label(text="Score: 0", bg=THEME_COLOR, fg="white")
+        self.score = Label(text="Score: 0", bg=THEME_COLOR, fg="white", font=("Arial", 14, "bold"))
         self.score.grid(column=1, row=0)
 
         self.canvas = Canvas(bg="white", width=300, height=250)
@@ -33,9 +33,14 @@ class QuizInterface:
 
     def get_next_question(self):
         self.canvas.config(bg="white")
-        self.score.config(text=f"Score: {self.quiz.score}")
-        q_text = self.quiz.next_question()
-        self.canvas.itemconfig(self.question_text, text = q_text)
+        if self.quiz.still_has_questions():
+            self.score.config(text=f"Score: {self.quiz.score}")
+            q_text = self.quiz.next_question()
+            self.canvas.itemconfig(self.question_text, text = q_text)
+        else:
+            self.canvas.itemconfig(self.question_text, text=f"You finished the quiz.\nFinal Score: {self.quiz.score}")
+            self.true_button.config(state="disabled")
+            self.false_button.config(state="disabled")
 
 
     def true_guess(self):
