@@ -37,7 +37,7 @@ else:
 
 percentage_difference = (price_difference / ((yesterday_closing + day_before_yesterday_closing) / 2)) * 100 
 
-if abs(percentage_difference) < 5:
+if abs(percentage_difference) > 5:
 
     news_url = 'https://newsapi.org/v2/everything?q=' + COMPANY_NAME +'&language=en&pageSize=3&sortBy=publishedAt&apiKey=' + NEWS_KEY
     news_reponse = requests.get(news_url)
