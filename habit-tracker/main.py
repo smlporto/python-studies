@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 USERNAME = "smlporto"
 TOKEN = ""
@@ -19,16 +20,24 @@ graph_params = {
     "color": "ichou"
 }
 
+add_pixel_params = {
+    "date": datetime.now().strftime("%Y%m%d"),
+    "quantity": "5",
+}
+
 headers = {
     "X-USER-TOKEN": TOKEN
 }
 
 user_endpoint = "https://pixe.la/v1/users"
 graph_endpoint = f"{user_endpoint}/{USERNAME}/graphs"
+add_pixel_endpoint = f"{user_endpoint}/{USERNAME}/graphs/{GRAPH_ID}"
 
 #response = requests.post(url=user_endpoint, json=user_params)
 #print(response.text)
 
-response = requests.post(url=graph_endpoint, json=graph_params, headers=headers)
-print(response.text)
+#response = requests.post(url=graph_endpoint, json=graph_params, headers=headers)
+#print(response.text)
 
+response = requests.post(url=add_pixel_endpoint, json=add_pixel_params, headers=headers)
+print(response.text)
