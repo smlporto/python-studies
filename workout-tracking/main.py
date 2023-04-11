@@ -1,13 +1,15 @@
 import requests
 from datetime import datetime
+import os
 
 APP_ID = ""
 API_KEY = ""
+SHEETY_TOKEN = ""
 
 NUTRI_ENDPOINT = "https://trackapi.nutritionix.com/v2/natural/exercise"
 SHEETY_ENDPOINT = f"https://api.sheety.co/40f11ac21102be9c157ee3291cf7cf72/myWorkouts/workouts"
 
-headers = {
+nutri_headers = {
     "x-app-id": APP_ID,
     "x-app-key": API_KEY,
     "Content-Type": "application/json"
@@ -21,10 +23,13 @@ nutri_parameters = {
     "age":22
 }
 
-response_nutritionix = requests.post(url=NUTRI_ENDPOINT, json=nutri_parameters, headers=headers)
+response_nutritionix = requests.post(url=NUTRI_ENDPOINT, json=nutri_parameters, headers=nutri_headers)
 response_nutritionix.raise_for_status()
 workout_info = response_nutritionix.json()
-print(workout_info)
+
+sheety_headers = {
+    "Authorization": f"Bearer {SHEETY_TOKEN}"
+}
 
 for exercise in workout_info["exercises"]:
     sheety_parameters = {
@@ -41,6 +46,5 @@ for exercise in workout_info["exercises"]:
     # response_sheety.raise_for_status()
     # print(response_sheety.json())
 
-    response_sheety = requests.post(url=SHEETY_ENDPOINT, json=sheety_parameters)
+    response_sheety = requests.post(url=SHEETY_ENDPOINT, json=sheety_parameters, headers=sheety_headers)
     response_sheety.raise_for_status()
-    print(response_sheety.text)
