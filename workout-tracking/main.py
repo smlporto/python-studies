@@ -1,13 +1,9 @@
 import requests
 from datetime import datetime
 import os
-
-APP_ID = ""
-API_KEY = ""
-SHEETY_TOKEN = ""
+from config import *
 
 NUTRI_ENDPOINT = "https://trackapi.nutritionix.com/v2/natural/exercise"
-SHEETY_ENDPOINT = f"https://api.sheety.co/40f11ac21102be9c157ee3291cf7cf72/myWorkouts/workouts"
 
 nutri_headers = {
     "x-app-id": APP_ID,
