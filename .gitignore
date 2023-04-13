@@ -152,3 +152,5 @@ cython_debug/
 #.idea/
 birthday-wisher/
 config.py
+token.json
+credentials.json
