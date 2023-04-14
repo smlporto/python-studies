@@ -60,5 +60,4 @@ class DataManager:
                 new_info.append([code])
                 
         result = sheet.values().update(spreadsheetId=SPREADSHEET_ID, range="B1", valueInputOption="USER_ENTERED", body={'values': new_info}).execute()
-        print(result)
         
