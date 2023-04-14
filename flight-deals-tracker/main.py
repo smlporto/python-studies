@@ -9,6 +9,8 @@ sheet_data = data_manager.get_data()
 
 flight_search = FlightSearch()
 
+notification_manager = NotificationManager()
+
 ORIGIN_CITY = "SAO"
 
 for row in sheet_data:
@@ -31,3 +33,6 @@ for i, destination in enumerate(sheet_data):
             from_date=tomorrow,
             to_date=six_months_period
         )
+        if flight and flight.price <= int(destination[2]):
+            notification_manager.telegram_bot_sendtext(f"Low price alert! \nOnly R${flight.price} to fly from {flight.origin}-{flight.origin_airport} to {flight.destination}-{flight.destination_airport}, from {flight.go_date} to {flight.return_date}.")
+            
