@@ -28,6 +28,34 @@ web_page = response.text
 soup = BeautifulSoup(web_page, "html.parser")
 
 songs = soup.select("li ul li h3")
-songs_list = [song.getText().strip() for song in songs]
-print(songs_list)
+songs_list = [song.getText().strip().replace("'","") for song in songs]
+
+authors_list = []
+authors = soup.find_all(name="span", class_="a-no-trucate")
+for author in authors:
+    clean_name = author.getText().lower().strip().split("featuring")[0].split(" / ")[0].split(" x ")[0].split(" & ")[0].split("with")[0]
+    authors_list.append(clean_name)
+#print(authors_list)    
+
+songs_authors = []
+for i in range(len(songs_list)):
+    songs_authors.append((songs_list[i], authors_list[i]))
+#print(songs_authors)
+
+song_uris = []
+
+for (song, author) in songs_authors:
+    searched_song = sp.search(q=f"track: {song} artist:{author}", type="track")
+    #print(searched_song)
+    try:
+        uri = searched_song["tracks"]["items"][0]["uri"]
+        song_uris.append(uri)
+    except IndexError:
+        print(f"{song} not found.")
+        
+playlist = sp.user_playlist_create(user=user_id, name=f"{date} Billboard 100", public=False, collaborative=False, description=f"100 best songs at {date}")
+playlist_id = playlist["id"]
+
+sp.user_playlist_add_tracks(user=user_id, playlist_id=playlist_id, tracks=song_uris, position=None)
+        
 
