@@ -153,4 +153,5 @@ cython_debug/
 birthday-wisher/
 config.py
 token.json
+token.txt
 credentials.json
