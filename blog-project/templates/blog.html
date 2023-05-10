@@ -7,8 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello!</h1>
-    <h2>Let me guess you gender and age! search for /guess/your_name on the url.</h1>
-    <a href="{{ url_for('get_blog', num=3) }}">Read our blog</a>
+    {% for post in posts: %}
+        {% if post["id"] == 2:  %}
+        <h1>{{ post["title"] }}</h1>
+        <h2>{{ post["subtitle"] }}</h2>
+        {% endif %}
+    {% endfor %}
 </body>
 </html>
